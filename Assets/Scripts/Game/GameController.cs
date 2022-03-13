@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] GameObject canon;
     [SerializeField] private Joystick joystick;
     [SerializeField] float _rotateSpeed = 50;
+    [SerializeField] GameObject winWindow;
     float previousRotY;
     Quaternion rot;
-    
-    
+
+    public static GameController instance;
     void Start()
     {
+        if (null == instance) instance = this;
+        else Destroy(gameObject);
         rot = canon.transform.rotation;
     }
 
@@ -27,6 +31,17 @@ public class GameController : MonoBehaviour
         {
             canon.transform.Rotate(Vector3.up, joystick.Horizontal * _rotateSpeed * Time.deltaTime);
         }
+    }
+
+    public void Reload()
+    {
+        winWindow.SetActive(false);
+        SceneManager.LoadScene(0);
+    }
+
+    public void Win()
+    {
+        winWindow.SetActive(true);
     }
 
     public void TouchDown()
